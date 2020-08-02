@@ -1,0 +1,12 @@
+### Login user
+POST http://localhost:9000/api/auth
+Content-Type: application/json
+
+{
+    "email": "mosh@domain.com",
+    "password": "12345"
+}
+
+### get listings
+GET http://localhost:9000/api/my/listings
+x-auth-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsIm5hbWUiOiJNb3NoIiwiZW1haWwiOiJtb3NoQGRvbWFpbi5jb20iLCJpYXQiOjE1OTYyODYzNDB9.e_xyuqfZva2UCfMdYni4OVyC7Xm8tITHzT8RLkSR8L8

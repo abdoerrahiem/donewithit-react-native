@@ -1,42 +1,42 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { NavigationContainer } from '@react-navigation/native'
 import NetInfo, { useNetInfo } from '@react-native-community/netinfo'
 import { AsyncStorage } from 'react-native'
+import jwtDecode from 'jwt-decode'
+import { AppLoading } from 'expo'
 
 import AuthNavigator from './navigation/AuthNavigation'
 import navigationTheme from './navigation/navigationTheme'
 import AppNavigator from './navigation/AppNavigator'
 import { Button } from 'react-native'
 import OfflineNotice from './components/OfflineNotice'
+import AuthContext from './auth/context'
+import { getUser } from './auth/storage'
 
 const App = () => {
-  // const netInfo = useNetInfo()
-  // const demo = async () => {
-  //   try {
-  //     await AsyncStorage.setItem('person', JSON.stringify({ id: 1 }))
-  //     const value = await AsyncStorage.getItem('person')
-  //     const person = JSON.parse(value)
-  //     console.log(person)
-  //   } catch (err) {
-  //     console.log(err)
-  //   }
-  // }
+  const [user, setUser] = useState(null)
+  const [isReady, setIsReady] = useState(false)
 
-  // demo()
+  const restoreUser = async () => {
+    const user = await getUser()
+    if (user) setUser(user)
+  }
 
-  // return null
+  // useEffect(() => {
+  //   restoreToken()
+  // }, [])
+  if (!isReady)
+    return (
+      <AppLoading startAsync={restoreUser} onFinish={() => setIsReady(true)} />
+    )
 
   return (
-    // <Button
-    //   title='There is connection'
-    //   disabled={!netInfo.isInternetReachable}
-    // />
-    <>
+    <AuthContext.Provider value={{ user, setUser }}>
       <OfflineNotice />
       <NavigationContainer>
-        <AppNavigator />
+        {user ? <AppNavigator /> : <AuthNavigator />}
       </NavigationContainer>
-    </>
+    </AuthContext.Provider>
   )
 }
 

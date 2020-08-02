@@ -21,29 +21,31 @@ const Listings = ({ navigation }) => {
   }, [])
 
   return (
-    <Screen style={styles.screen}>
-      {error && (
-        <>
-          <AppText>Oops. There is something wrong!</AppText>
-          <Button title='Refresh' onPress={loadListings} />
-        </>
-      )}
+    <>
       <ActivityIndicator visible={loading} />
-      <FlatList
-        showsVerticalScrollIndicator={false}
-        data={listings}
-        keyExtractor={(listing) => listing.id.toString()}
-        renderItem={({ item }) => (
-          <Card
-            title={item.title}
-            subtitle={`$${item.price}`}
-            imageUrl={item.images[0].url}
-            onPress={() => navigation.navigate(routes.LISTING_DETAILS, item)}
-            thumbnailUrl={item.images[0].thumbnailUrl}
-          />
+      <Screen style={styles.screen}>
+        {error && (
+          <>
+            <AppText>Oops. There is something wrong!</AppText>
+            <Button title='Refresh' onPress={loadListings} />
+          </>
         )}
-      />
-    </Screen>
+        <FlatList
+          showsVerticalScrollIndicator={false}
+          data={listings}
+          keyExtractor={(listing) => listing.id.toString()}
+          renderItem={({ item }) => (
+            <Card
+              title={item.title}
+              subtitle={`$${item.price}`}
+              imageUrl={item.images[0].url}
+              onPress={() => navigation.navigate(routes.LISTING_DETAILS, item)}
+              thumbnailUrl={item.images[0].thumbnailUrl}
+            />
+          )}
+        />
+      </Screen>
+    </>
   )
 }
 
