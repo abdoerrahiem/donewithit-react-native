@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, createRef } from 'react'
 import { NavigationContainer } from '@react-navigation/native'
 import NetInfo, { useNetInfo } from '@react-native-community/netinfo'
 import { AsyncStorage } from 'react-native'
 import jwtDecode from 'jwt-decode'
-import { AppLoading } from 'expo'
+import { AppLoading, Notifications } from 'expo'
 
 import AuthNavigator from './navigation/AuthNavigation'
 import navigationTheme from './navigation/navigationTheme'
@@ -12,6 +12,8 @@ import { Button } from 'react-native'
 import OfflineNotice from './components/OfflineNotice'
 import AuthContext from './auth/context'
 import { getUser } from './auth/storage'
+import { navigationRef } from './navigation/rootNavigation'
+import Screen from './components/Screen'
 
 const App = () => {
   const [user, setUser] = useState(null)
@@ -30,13 +32,31 @@ const App = () => {
       <AppLoading startAsync={restoreUser} onFinish={() => setIsReady(true)} />
     )
 
+  const showNotification = () => {
+    Notifications.scheduleLocalNotificationAsync(
+      {
+        title: 'Congratulations',
+        body: 'Your order was successfully placed!',
+        data: {
+          _displayInForeground: true,
+        },
+      },
+      {
+        time: new Date().getTime() + 2000,
+      }
+    )
+  }
+
   return (
     <AuthContext.Provider value={{ user, setUser }}>
       <OfflineNotice />
-      <NavigationContainer>
+      <NavigationContainer ref={navigationRef}>
         {user ? <AppNavigator /> : <AuthNavigator />}
       </NavigationContainer>
     </AuthContext.Provider>
+    // <Screen>
+    //   <Button title='Tap me' onPress={showNotification} />
+    // </Screen>
   )
 }
 
